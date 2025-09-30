@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { register } from "../api/auth";
 import Loader from "../components/Loader";
 
@@ -62,6 +63,15 @@ const Register = () => {
         />
         <button className="w-full bg-primary text-white px-4 py-3 rounded-md mt-2 text-sm sm:text-base hover:bg-blue-700 transition-colors">Register</button>
       </form>
+      
+      <div className="mt-4 text-center">
+        <Link 
+          to="/login" 
+          className="text-accent hover:text-primary underline text-sm"
+        >
+          Already have an account? Login
+        </Link>
+      </div>
     </div>
   );
 };

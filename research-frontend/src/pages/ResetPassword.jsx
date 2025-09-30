@@ -1,25 +1,16 @@
-import { useState, useEffect } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { resetPassword } from "../api/auth";
 import Loader from "../components/Loader";
 
 const ResetPassword = () => {
+  const { token } = useParams();
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [tokenValid, setTokenValid] = useState(true);
-  
-  const { token } = useParams();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!token) {
-      setTokenValid(false);
-      setError("Invalid or missing reset token.");
-    }
-  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,20 +19,20 @@ const ResetPassword = () => {
     setMessage("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError("Passwords do not match");
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      setError("Password must be at least 6 characters long");
       setLoading(false);
       return;
     }
 
     try {
-      const res = await resetPassword(token, { password });
-      setMessage("Password has been reset successfully. You can now login with your new password.");
+      const res = await resetPassword(token, { password, confirmPassword });
+      setMessage("Password reset successful! You can now login with your new password.");
       setLoading(false);
       
       // Redirect to login after 3 seconds
@@ -49,29 +40,10 @@ const ResetPassword = () => {
         navigate("/login");
       }, 3000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to reset password. The token may be expired or invalid.");
+      setError(err.response?.data?.message || "Failed to reset password. Please try again.");
       setLoading(false);
     }
   };
-
-  if (!tokenValid) {
-    return (
-      <div className="form-container">
-        <h2 className="text-primary text-xl sm:text-2xl mb-4 text-center">Invalid Reset Link</h2>
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm sm:text-base">
-          {error}
-        </div>
-        <div className="text-center">
-          <Link 
-            to="/forgot-password" 
-            className="text-accent hover:text-primary underline text-sm sm:text-base"
-          >
-            Request a new password reset
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="form-container">
