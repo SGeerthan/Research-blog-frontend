@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -11,15 +11,32 @@ import Loader from "./components/Loader";
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const SESSION_MAX_MS = useMemo(() => 1000 * 60 * 60 * 2, []); // 2 hours
   const [loading, setLoading] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("sessionStart");
     setToken("");
   };
 
+  const isSessionValid = () => {
+    const start = Number(localStorage.getItem("sessionStart") || 0);
+    if (!start) return false;
+    return Date.now() - start < SESSION_MAX_MS;
+  };
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (token && !isSessionValid()) {
+        handleLogout();
+      }
+    }, 60 * 1000);
+    return () => clearInterval(id);
+  }, [token, SESSION_MAX_MS]);
+
   const ProtectedRoute = ({ children }) => {
-    if (!token) return <Navigate to="/login" />;
+    if (!token || !isSessionValid()) return <Navigate to="/login" />;
     return children;
   };
 

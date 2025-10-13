@@ -15,6 +15,7 @@ const Login = ({ setToken }) => {
     try {
       const res = await login({ email, password });
       localStorage.setItem("token", res.data.token);
+      localStorage.setItem("sessionStart", String(Date.now()));
       setToken(res.data.token);
       navigate("/dashboard");
     } catch (err) {
