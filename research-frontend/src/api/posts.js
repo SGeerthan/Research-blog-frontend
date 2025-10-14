@@ -1,5 +1,5 @@
 import axios from "axios";
-const API = "http://localhost:5000/api/posts";
+const API = "https://research-blog-backend-4b6h.vercel.app/api/posts";
 
 // Get all posts
 export const getPosts = () => axios.get(API);

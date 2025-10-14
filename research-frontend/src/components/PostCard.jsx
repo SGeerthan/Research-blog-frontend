@@ -20,7 +20,7 @@ const PostCard = ({ post }) => {
           {post.images.map((img, idx) => (
             <img
               key={idx}
-              src={`http://localhost:5000/${img}`}
+              src={`https://research-blog-backend-4b6h.vercel.app/${img}`}
               alt="post"
               className="w-full h-24 sm:h-32 object-cover rounded-md hover:opacity-90 transition-opacity"
             />
@@ -30,7 +30,7 @@ const PostCard = ({ post }) => {
       
       {post.pdf && (
         <a
-          href={`http://localhost:5000/${post.pdf}`}
+          href={`https://research-blog-backend-4b6h.vercel.app/${post.pdf}`}
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-700 underline mt-3 block text-sm sm:text-base hover:text-blue-800 transition-colors"

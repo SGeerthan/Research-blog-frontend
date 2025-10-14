@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth";
+const API_URL = "https://research-blog-backend-4b6h.vercel.app/api/auth";
 
 export const register = async (data) => {
   return axios.post(`${API_URL}/register`, data);
